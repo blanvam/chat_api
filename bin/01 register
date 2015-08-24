@@ -1,0 +1,54 @@
+#!/usr/bin/env ruby
+
+require 'bundler/setup'
+require 'chat_api'
+
+include Dora
+
+module Clean
+  def Clean.clean(string)
+    ['-', ' '].each do |pattern|
+      string.gsub!(pattern, '')
+    end
+    string
+  end
+end
+
+puts 'Number?'
+username = Clean::clean(gets.chomp)
+
+puts 'Get sms or voice?'
+check = false
+option = ''
+until check do
+  option = Clean::clean(gets.chomp)
+  if option == 'sms' || option == 'voice'
+    check = true
+  else
+    puts "Sorry, you typed wrong response. Do you want receive 'sms' or 'voice'?"
+  end
+end
+
+w = Client.new(username)
+begin
+  w.code_request(option)
+rescue ChatAPIError => error
+  puts error.inspect
+  exit
+rescue => error
+  puts error.inspect
+  exit
+end
+
+puts 'Insert received code: '
+code = Clean.clean(gets.chomp)
+
+begin
+  result = w.code_register(code)
+rescue ChatAPIError => error
+  puts error.inspect
+rescue => error
+  puts error.inspect
+end
+
+puts result
