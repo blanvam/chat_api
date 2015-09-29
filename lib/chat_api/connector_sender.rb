@@ -86,13 +86,13 @@ module Dora
 
     def send_message_node(to, node, id = nil)
       message_id = id.nil? ? create_msg_id : id
-      send_node(MessageNode.new(node, to.to_jid.to_s, message_id))
+      send_node(Dora::Protocol::MessageNode.new(node, to.to_jid.to_s, message_id))
       wait_for_server(message_id)
       message_id
     end
 
     def send_pong(message_id)
-      send_node(IqNode.new(message_id, nil, 'result'))
+      send_node(Dora::Protocol::IqNode.new(message_id, nil, 'result'))
     end
 
     def send_ack(node, cla)

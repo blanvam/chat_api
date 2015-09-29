@@ -139,10 +139,6 @@ module Dora
       profile_image(@jid.to_s, path)
     end
 
-    def set_new_message_bind(bind) #1974
-      @message_bind = bind
-    end
-
     private
 
   end

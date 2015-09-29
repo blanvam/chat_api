@@ -1,0 +1,42 @@
+#!/usr/bin/env ruby
+# encoding: utf-8
+
+require 'bundler/setup'
+require 'chat_api'
+include Dora
+
+require 'generators/dora/process_node/templates/process_node'
+
+username = ''
+nickname = ''
+password = ''
+
+target_v = ''
+sync = [target_v]
+
+w = Client.new(username, nickname)
+
+w.connect
+puts 'Login...'
+w.login(password)
+puts 'Connected to WhatsApp'
+
+w.server_properties
+w.client_configuration
+w.synchronize(sync)
+w.poll_message
+w.presence_subscription(target_v)
+
+w.set_profile_picture(Dir.pwd + '/images/rice_milk.jpg')
+
+while true do
+    w.poll_message
+    w.get_messages
+    begin
+      Timeout::timeout 1 do
+        line = gets.chomp
+        w.send_message(target_v, line)
+      end
+    rescue Timeout::Error
+    end
+end

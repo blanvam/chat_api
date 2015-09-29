@@ -1,24 +1,38 @@
 require 'chat_api/connector_media'
+require 'chat_api/process_node'
 require 'chat_api/protocol/challenge'
 require 'chat_api/protocol/key_stream'
 
 module Dora
-  class ProcessNode
-    def initialize(node) end
-  end
+
   class Connector < ConnectorMedia
     def initialize(number)
       @challenge = Dora::Protocol::Challenge.new(number)
       @keys = { input: nil, output: nil}
-      @message_queue = []
+      @nodes = []
+      @messages = []
       @timeout = nil
       @login_time = nil
-      @iq_counter = 1
-      @message_counter = 1
       #@last_id == nil
       #@out_queue = []
-      @bind_class = ProcessNode
+      @bind = ProcessNode
       super()
+    end
+
+    def get_messages
+      @messages
+    end
+
+    def reset_messages
+      @messages = []
+    end
+
+    def get_nodes
+      @nodes
+    end
+
+    def reset_nodes
+      @nodes = []
     end
 
     def poll_message(auto_receipt = true, type = 'read')
@@ -69,10 +83,8 @@ module Dora
       true
     end
 
-    def get_messages
-      ret = @message_queue
-      @message_queue = []
-      ret
+    def set_bind(bind) #1974
+      @bind = bind
     end
 
     private
@@ -84,6 +96,7 @@ module Dora
     end
 
     def process_stanza_node(node, auto_receipt = true, type = 'read')
+      @nodes << node
       case node.tag
         when 'start', 'stream:features', 'ack', 'chatstate'
         when 'challenge'
@@ -110,7 +123,7 @@ module Dora
             send_ack(node, 'call')
           end
         when 'message'
-          @message_queue << node
+          @messages << node
           #send_next_message if node.has_child?('x') && @last_id == node.attributes['id']
           if node.attributes['type'] == 'text' && !node.get_child('body').nil?
             author = node.attributes['participant']
@@ -163,7 +176,7 @@ module Dora
         else
           raise ChatAPIError.new("tag: #{node.tag} not implemented")
       end
-      @bind_class.new(node)
+      @bind.process(node)
       node
     end
 
