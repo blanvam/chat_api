@@ -14,7 +14,7 @@ module Dora
 
 			def start_stream(domain, resource)
 				attributes = {to: domain, resource: resource}
-				write_list_start(attributes.length * 2 + 1)
+				write_list_start(attributes.size * 2 + 1)
 				write_int8(0x01)
 				write_attributes(attributes)
 				"WA\x01\x05#{flush_buffer}"
@@ -33,27 +33,27 @@ module Dora
 
 			def write_internal(node)
 				len = 1
-				len += (node.attributes.length * 2) if node.attributes
-				len += 1 if node.children && node.children.length > 0
-				len += 1 if node.data && node.data.length > 0
+				len += (node.attributes.size * 2) if node.attributes
+				len += 1 if node.children && node.children.size > 0
+				len += 1 if node.data && node.data.size > 0
 				write_list_start(len)
 				write_string(node.tag)
 				write_attributes(node.attributes)
-				write_bytes(node.data) if node.data && node.data.length > 0
-				if node.children && node.children.length > 0
-					write_list_start(node.children.length)
+				write_bytes(node.data) if node.data && node.data.size > 0
+				if node.children && node.children.size > 0
+					write_list_start(node.children.size)
 					node.children.each do | child | write_internal(child) end
 				end
 			end
 
 			def flush_buffer(encrypt=true)
-				size = @output.length
+				size = @output.size
 				data = @output.clone
 				if !@key.nil? && encrypt
 					b_size = ((size & 0xf0000) >> 16).chr << ((size & 0xff00) >> 8).chr << (size & 0xff).chr
 					# encrypt
 					data = @key.encode_message(data, size, 0, size)
-					len = data.length
+					len = data.size
 					b_size[0] = ((8 << 4) | ((len & 16711680) >> 16)).chr
 					b_size[1] = ((len & 65280) >> 8).chr
 					b_size[2] = (len & 255).chr
@@ -75,7 +75,7 @@ module Dora
 
 			def write_jid(user, server)
 				write_int8(0xfa)
-				if user.length > 0
+				if user.size > 0
 					write_string(user)
 				else
 					write_token(0)
@@ -96,7 +96,7 @@ module Dora
 			end
 
 			def write_bytes(bytes)
-				len = bytes.length
+				len = bytes.size
 				if len >= 0x100  #<= 0xff
 					write_int8(0xfd)
 					write_int24(len)
