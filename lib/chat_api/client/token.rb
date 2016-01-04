@@ -2,7 +2,7 @@ require 'digest/md5'
 require 'base64'
 
 module Dora
-  module Protocol
+  class Client
     class Token
       RELEASE_TIME = '1439921717185'
 

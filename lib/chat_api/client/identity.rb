@@ -1,6 +1,6 @@
 # encoding: utf-8
 module Dora
-  module Protocol
+  class Client
     class Identity
 
       def initialize(jid, file = nil)

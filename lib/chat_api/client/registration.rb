@@ -2,19 +2,19 @@ require 'rest-client'
 require 'active_support'
 require 'active_support/core_ext/object/to_query'
 
-require 'chat_api/protocol/identity'
-require 'chat_api/protocol/token'
-require 'chat_api/protocol/utils'
+require 'chat_api/client/identity'
+require 'chat_api/client/token'
+require 'chat_api/client/utils'
 
 module Dora
   class Client
     class Registration
       include ActiveSupport::JSON
-      include Dora::Protocol::Utils
+      include Utils
 
       def initialize(number, identity_file_path = nil)
         @number = number
-        @identity = Dora::Protocol::Identity.new(number, identity_file_path)
+        @identity = Identity.new(number, identity_file_path)
       end
 
       def get_code(method = 'sms', carrier = '', platform = 'Android')
@@ -31,7 +31,7 @@ module Dora
         end
 
         # Build the token.
-        token = Dora::Protocol::Token::generate_request_token(phone[:phone], platform)
+        token = Token::generate_request_token(phone[:phone], platform)
 
         # Build the url.
         host = 'https://' + WHATSAPP_REQUEST_HOST

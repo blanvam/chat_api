@@ -2,7 +2,7 @@ require 'active_support'
 require 'CSV'
 
 module Dora
-  module Protocol
+  class Client
     module Utils
       include ActiveSupport::JSON
 
