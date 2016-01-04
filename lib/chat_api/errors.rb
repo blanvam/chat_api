@@ -8,6 +8,14 @@ module Dora
   # A client-side only argument error
   class ArgumentError < ChatAPIError; end
 
+  class RegistrationError < ChatAPIError
+    attr_reader :object
+    def initialize(message, object)
+      super(message)
+      @object = object
+    end
+  end
+
   # A client-authentication failure
   class ClientAuthenticationFailure < ChatAPIError; end
 

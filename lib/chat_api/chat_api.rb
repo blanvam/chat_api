@@ -19,10 +19,15 @@ module Dora
   WHATSAPP_REQUEST_HOST   = 'v.whatsapp.net/v2/code'     # Request host
   WHATSAPP_SERVER         = 's.whatsapp.net'             # Whatsapp server
   WHATSAPP_DEVICE         = 'S40'                        # The device name.
-  WHATSAPP_VER            = '2.13.21'                    # Version
-  WHATSAPP_USER_AGENT     = 'WhatsApp/2.13.21 S40Version/14.26 Device/Nokia302'        # User agent used in request/registration code.
+  WHATSAPP_VER            = '2.12.391'                    # Version
+  WHATSAPP_USER_AGENT     = 'WhatsApp/2.12.391 Android/14.26 Device/Xiaomi'          # User agent used in request/registration code.
   WHATSAPP_VER_CHECKER    = 'https://coderus.openrepos.net/whitesoft/whatsapp_scratch' # Check WhatsApp version.
 
+  DEVICE                  = 'armani'
+  OS_VERSION              = '4.3'
+  MANUFACTURER            = 'Xiaomi'
+  BUILD_VERSION           = 'JLS36C'
+  PLATFORM                = 'Android'
 
   def Dora.update_ver(data)
     ver = data['e']

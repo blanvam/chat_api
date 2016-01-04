@@ -1,12 +1,7 @@
 require 'chat_api/net/wtcp_socket'
 
-require 'rest-client'
-require 'active_support'
-require 'active_support/core_ext/object/to_query'
-
 module Dora
   class Connection
-    include ActiveSupport::JSON
 
     def initialize
       @status = :disconnected
@@ -41,22 +36,6 @@ module Dora
     end
 
     protected
-
-    def get_response(host, query)
-      url = "#{host}?#{query.to_query}"
-
-      resource = RestClient::Resource.new(
-          url,
-          :user_agent => WHATSAPP_USER_AGENT,
-          :verify_ssl => 0, #OpenSSL::SSL::VERIFY_NONE,
-          :accept     => 'text/json'
-      )
-
-      response = resource.get :user_agent => WHATSAPP_USER_AGENT,
-                              :accept => 'text/json'
-
-      ActiveSupport::JSON.decode(response)
-    end
 
     def send_data(data)
       unless @socket.nil?
