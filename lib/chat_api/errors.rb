@@ -14,6 +14,10 @@ module Dora
       super(message)
       @object = object
     end
+
+    def to_s
+      'Registration error: ' + super
+    end
   end
 
   # A client-authentication failure

@@ -22,7 +22,7 @@ module Dora
 			def self.generate_keys(password, challenge)
 				array = %w(key key key key)
 				challenge << '0'
-				0.upto(3) do | idx|
+				0.upto(3) do |idx|
 					challenge[challenge.length-1] = (idx+1).chr
 					foo = OpenSSL::PKCS5.pbkdf2_hmac_sha1(password, challenge, 2, 20)
 					array[idx] = foo
@@ -32,11 +32,11 @@ module Dora
 
 			def decode_message(buffer, mac_offset, offset, length)
 				mac = compute_mac(buffer, offset, length)
-				4.times do | i |
+				4.times do |i|
 					foo = (buffer[mac_offset + i]).ord
 					bar = mac[i].ord
 					if foo != bar
-						raise ChatAPIError.new("MAC mismatch: #{foo != bar}")
+						fail ChatAPIError.new("MAC mismatch: #{foo != bar}")
 					end
 				end
 				@rc4.cipher(buffer, offset, length)

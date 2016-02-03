@@ -151,9 +151,9 @@ module Dora
             when 'status'
               notification(node, type)
             when 'picture'
-              if node.has_child?('set')
+              if node.child?('set')
                 notification(node, type, 'set')
-              elsif node.has_child?('delete')
+              elsif node.child?('delete')
                 notification(node, type, 'delete')
               end
             when 'contacts'
@@ -166,19 +166,19 @@ module Dora
                 puts "Corrupt Stream: value #{value} is not numeric"
               end
             when 'w:gp2'
-              if node.has_child?('remove')
-                if node.get_child(0).has_child?('participant')
+              if node.child?('remove')
+                if node.get_child(0).child?('participant')
                   notification(node, 'group', 'participant_removed')
                 end
-              elsif node.has_child?('add')
+              elsif node.child?('add')
                 notification(node, 'group', 'participant_added')
-              elsif node.has_child?('create')
+              elsif node.child?('create')
                 notification(node, 'group', 'created')
-              elsif node.has_child?('subject')
+              elsif node.child?('subject')
                 notification(node, 'group', 'subject')
-              elsif node.has_child?('promote')
+              elsif node.child?('promote')
                 notification(node, 'group', 'promote')
-              elsif node.has_child?('modify')
+              elsif node.child?('modify')
                 notification(node, 'group', 'modify')
               end
             when 'account'

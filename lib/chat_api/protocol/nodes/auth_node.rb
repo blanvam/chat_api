@@ -5,7 +5,7 @@ module Dora
     class AuthNode < ProtocolNode
 
       def initialize(number, auth_data)
-        super('auth', {mechanism: 'WAUTH-2', user: number}, nil, auth_data)
+        super('auth', {user: number, mechanism: 'WAUTH-2'}, nil, auth_data)
       end
 
     end

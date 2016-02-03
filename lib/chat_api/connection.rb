@@ -38,6 +38,7 @@ module Dora
     protected
 
     def send_data(data)
+      logger.debug_log('Sent: '+bin2hex(data)+"\n")
       unless @socket.nil?
         begin
           @socket.write(data)

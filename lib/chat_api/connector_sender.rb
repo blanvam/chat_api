@@ -11,8 +11,21 @@ module Dora
     def initialize
       @iq_counter = 1
       @message_counter = 1
+      @message_id = ''
       @bin_trees_nodes = { writer: Dora::Protocol::BinTreeNodeWriter.new, reader: Dora::Protocol::BinTreeNodeReader.new}
       super()
+    end
+
+    def set_message_id(msg)
+      @message_id = msg
+    end
+
+    def request_last_seen(to)
+      msg_id = @node_id['getlastseen'] = create_iq_id
+      query_node = Dora::Protocol::ProtocolNode.new('query')
+      message_node = Dora::Protocol::IqNode.new(msg_id, to.to_jid.to_s, 'get', 'jabber:iq:last', [query_node], '')
+      send_node(message_node)
+      wait_for_server(msg_id)
     end
 
     def server_properties
@@ -62,6 +75,10 @@ module Dora
       message_id
     end
 
+    def send_presence(attributes)
+      send_node(Dora::Protocol::PresenceNode.new(attributes.merge({type: 'available'})))
+    end
+
     protected
 
     def writer
@@ -79,9 +96,8 @@ module Dora
     end
 
     def create_msg_id
-      message_id = @message_counter
       @message_counter += 1
-      @login_time.to_i.to_s + '-' + message_id.to_s
+      @message_id + @message_counter.to_s(16)
     end
 
     def send_message_node(to, node, id = nil)
@@ -113,13 +129,10 @@ module Dora
       send_node(Dora::Protocol::ClearDirtyNode.new(create_iq_id, categories))
     end
 
-    def send_presence(attributes)
-      send_node(Dora::Protocol::PresenceNode.new(attributes))
-    end
-
     private
 
     def send_node(node, encrypt = true)
+      logger.debug_log(node.to_s('tx  ')+"\n")
       send_data(writer.write(node, encrypt))
     end
 

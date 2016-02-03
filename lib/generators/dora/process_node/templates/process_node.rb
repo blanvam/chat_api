@@ -13,7 +13,7 @@ module Dora
       participant = node.attributes['participant']
       offline = node.attributes['offline']
       retries = node.attributes['retry']
-      if node.has_child?('list')
+      if node.child?('list')
         node.get_child('list').children.each do | child |
           from = child.attributes['from']
           id = child.attributes['id']
