@@ -24,11 +24,7 @@ module Dora
         country_code = (phone[:ISO3166] != '') ? phone[:ISO3166] : 'US'
         lang_code    = (phone[:ISO639] != '') ? phone[:ISO639] : 'en'
 
-        if carrier.nil?
-          mnc = phone[:mnc]
-        else
-          mnc = detect_mnc(country_code.downcase, carrier)
-        end
+        mnc = carrier.nil? ? phone[:mnc] : detect_mnc(country_code.downcase, carrier)
 
         # Build the token.
         token = Token::generate_request_token(phone[:phone], platform)
@@ -105,7 +101,7 @@ module Dora
         response
       end
 
-      def check_credentials(code = nil)
+      def check_credentials
         phone = dissect_phone(@number)
         raise ArgumentError.new('The provided phone number is not valid.') unless phone
 
@@ -123,18 +119,29 @@ module Dora
             in: phone[:phone],
             id: @identity.to_s,
             lg: lang_code,
-            lc: country_code
+            lc: country_code,
+            mistyped: '6',
+            network_radio_type: '1',
+            simnum: '1',
+            s: '',
+            copiedrc: '1',
+            hasinrc: '1',
+            rcmatch: '1',
+            pid: rand(100..9999),
+            extexist: '1',
+            extstate: '1',
         }
-        query[:code] = code unless code.nil?
-
         response = get_response(host, query)
 
         if response['status'] != 'ok'
-          message = response['reason'] == 'incorrect' ?
-              'You have wrong identity. Register number again or copy identity to a file in wadata folder'
-          :
-              'There was a problem trying to request the code.'
-
+          case response['reason']
+            when 'incorrect'
+              message = 'You have wrong identity. Register number again or copy identity to a file in wadata folder.'
+            when 'blocked'
+              message = 'Your number is blocked.'
+            else
+              message = 'There was a problem trying to request the code.'
+          end
           raise RegistrationError.new(message, response)
         end
         response
