@@ -6,22 +6,22 @@ require 'chat_api'
 include Dora
 
 module Clean
-  def Clean.clean(string)
-    ['-', ' '].each do |pattern|
-      string.gsub!(pattern, '')
+  class << self
+    def number(string)
+      ['+', '-', ' '].each { |pattern| string.gsub!(pattern, '') }
+      string
     end
-    string
   end
 end
 
 puts 'Number?'
-username = Clean::clean(gets.chomp)
+username = Clean.number(gets.chomp)
 
 puts 'Get sms or voice?'
 check = false
 option = ''
 until check do
-  option = Clean::clean(gets.chomp)
+  option = Clean.number(gets.chomp)
   if option == 'sms' || option == 'voice'
     check = true
   else
@@ -31,7 +31,7 @@ end
 
 w = Client.new(username)
 begin
-  w.code_request(option)
+  response = w.code_request(option)
 rescue ChatAPIError => error
   puts error.inspect
   exit
@@ -39,9 +39,10 @@ rescue => error
   puts error.inspect
   exit
 end
+puts response
 
 puts 'Insert received code: '
-code = Clean.clean(gets.chomp)
+code = Clean.number(gets.chomp)
 
 begin
   result = w.code_register(code)
