@@ -8,6 +8,7 @@ require 'chat_api/client/utils'
 
 module Dora
   class Client
+    # The Registration class has all methods needed to register a whatsapp number.
     class Registration
       include ActiveSupport::JSON
       include Utils
@@ -62,12 +63,13 @@ module Dora
         if response['status'] == 'sent'
           response
         elsif response['status'] != 'sent'
-          if response['reason'].present? && !response['reason'].nil? && response['reason'] == 'too_recent'
+          reason = response['reason'].present? && !response['reason'].nil?
+          if reason && response['reason'] == 'too_recent'
             minutes = (response['retry_after'] / 60).round(2)
             message = "Code already sent. Retry after #{minutes} minutes."
-          elsif response['reason'].present? && !response['reason'].nil?  && response['reason'] == 'too_many_guesses'
+          elsif reason  && response['reason'] == 'too_many_guesses'
             message = 'Too many guesses.'
-          elsif response['reason'].present? && !response['reason'].nil?  && response['reason'] == 'blocked'
+          elsif reason  && response['reason'] == 'blocked'
             message = 'The number is blocked.'
           else
             message = 'There was a problem trying to request the code.'
@@ -105,17 +107,18 @@ module Dora
         phone = dissect_phone(@number)
         raise ArgumentError.new('The provided phone number is not valid.') unless phone
 
-        country_code = (phone[:ISO3166] != '') ? phone[:ISO3166] : 'US'
-        lang_code    = (phone[:ISO639] != '') ? phone[:ISO639] : 'en'
+        iso3166 = phone[:ISO3166]
+        iso639 = phone[:ISO639]
+        country_code = (iso3166 != '') ? iso3166 : 'US'
+        lang_code    = (iso639 != '') ? iso639 : 'en'
 
-        if phone[:cc] == '77' || phone[:cc] == '79'
-          phone[:cc] = '7'
-        end
+        cc = phone[:cc]
+        cc = '7' if cc == '77' || cc == '79'
 
         # Build the url.
         host = 'https://' + WHATSAPP_CHECK_HOST
         query = {
-            cc: phone[:cc],
+            cc: cc,
             in: phone[:phone],
             id: @identity.to_s,
             lg: lang_code,

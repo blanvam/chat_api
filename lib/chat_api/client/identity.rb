@@ -1,12 +1,11 @@
 # encoding: utf-8
 module Dora
   class Client
+    # The Identify class define a identity used to register a number
     class Identity
 
       def initialize(jid, file = nil)
-        if file.nil?
-          file = File.join(Dora.data, DATA_FOLDER + "/id.#{jid}.dat")
-        end
+        file ||= File.join(Dora.data, DATA_FOLDER + "/id.#{jid}.dat")
 
         if File.exist?(file) && File.readable?(file)
           bytes = URI.unescape(open(file).read)
@@ -18,8 +17,9 @@ module Dora
 
         unless @bytes
           @bytes = Random.new.bytes(20).downcase
-          length = IO.write(file, URI::encode(@bytes))
-          unless length == URI::encode(@bytes).length
+          encode_bytes = URI::encode(@bytes)
+          length = IO.write(file, encode_bytes)
+          unless length == encode_bytes.length
             raise ChatAPIError('Unable to write identity file to ' + file);
           end
         end
