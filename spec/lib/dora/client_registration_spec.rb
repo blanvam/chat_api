@@ -21,7 +21,7 @@ describe Dora::ClientRegistration, unit: true do
         to_return(:status => 200, :body => File.read(File.expand_path(File.join('spec/support/registration/get_code_ok.json'))), :headers => {})
 
     response = code_request
-    er = {'status' => 'sent', 'length' => 6, 'method' => 'sms', 'retry_after'=> 64, 'sms_wait'=> 64, 'voice_wait'=> 64}
+    er = {status: 'sent', length: 6, method: 'sms', retry_after: 64, sms_wait: 64, voice_wait: 64}
     expect(response).to eq(er)
   end
 end

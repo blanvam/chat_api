@@ -28,19 +28,19 @@ end
 
 describe Dora::Registration::Token, unit: true do
   it 'correct token generation for nokia' do
-    rel = {'e' => '2.12.440', 'h' => '9999999999999'}
+    rel = {e: '2.12.440', h: '9999999999999'}
     Dora::Registration::Token.update_release_time(rel)
     expect(Dora::Registration::Token::RELEASE_TIME).to eq('1452554789539')
   end
 
   it 'correct  RELEASE_TIME' do
-    rel = {'e' => '2.12.441', 'h' => '9999999999999'}
+    rel = {e: '2.12.441', h: '9999999999999'}
     Dora::Registration::Token.update_release_time(rel)
     expect(Dora::Registration::Token::RELEASE_TIME).to eq('9999999999999')
   end
 
   it 'correct token RELEASE_TIME to default' do
-    rel = {'e' => '2.12.41', 'h' => '1452554789539'}
+    rel = {e: '2.12.41', h: '1452554789539'}
     Dora::Registration::Token.update_release_time(rel)
     expect(Dora::Registration::Token::RELEASE_TIME).to eq('1452554789539')
   end

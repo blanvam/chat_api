@@ -9,16 +9,15 @@ module Dora
       RELEASE_TIME = '1452554789539'
 
       def self.update_release_time(data)
-        ver = data['e']
+        ver = data[:e]
         if WHATSAPP_VER != ver
-          release_time = data['h']
+          release_time = data[:h]
 
           #Update RELEASE TIME in execution
           send(:remove_const, 'RELEASE_TIME') if const_defined?('RELEASE_TIME')
           const_set('RELEASE_TIME', release_time)
 
-          # RELEASE_TIME = 9999999999999
-          # Update file
+          # Update RELEASE TIME in file
           regexp = /RELEASE_TIME = \'\d{13}\'/
           write = "RELEASE_TIME = '#{release_time}'"
           Utils.file_edit(File.expand_path('../chat_api/lib/dora/registration/token.rb'), regexp, write)

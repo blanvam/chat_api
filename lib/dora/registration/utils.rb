@@ -1,15 +1,12 @@
 require 'rest-client'
-#require 'active_support'
-#require 'active_support/core_ext/object/to_query'
-require 'CSV'
+require 'active_support/core_ext/object/to_query'
 require 'json'
+require 'CSV'
 require 'tempfile'
 
 module Dora
   module Registration
     module Utils
-      #include ActiveSupport::JSON
-
       def get_rest_service(host, query)
         url = "#{host}?#{query.to_query}"
 
@@ -23,15 +20,15 @@ module Dora
         response = resource.get :user_agent => WHATSAPP_USER_AGENT,
                                 :accept => 'text/json'
 
-        ActiveSupport::JSON.decode(response)
+        JSON.parse(response, symbolize_names: true)
       end
 
       def process_response(response, default_message)
-        status = response['status']
+        status = response[:status]
         if status != 'ok' && status != 'sent'
-          case response['reason']
+          case response[:reason]
             when 'too_recent' # get_code
-              minutes = (response['retry_after'] / 60).round(2)
+              minutes = (response[:retry_after] / 60).round(2)
               message = "Code already sent. Retry after #{minutes} minutes."
             when 'too_many_guesses' # get_code
               message = 'Too many guesses.'
@@ -53,7 +50,7 @@ module Dora
       end
 
       def update_version
-        data = ActiveSupport::JSON.decode(open(WHATSAPP_VER_CHECKER).read)
+        data = JSON.parse(open(WHATSAPP_VER_CHECKER).read, symbolize_names: true)
         Dora.update_ver(data)
         Dora::Protocol::Token.update_release_time(data)
       end
