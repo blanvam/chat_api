@@ -1,34 +1,20 @@
-require 'chat_api/connector'
-require 'chat_api/client/registration'
-require 'chat_api/logger'
+require 'dora/logger'
+require 'dora/client_registration'
+require 'dora/connector'
 
 module Dora
   include Logging
 
+  # Client class to connect with WhatsApp
   class Client
+    include ClientRegistration
     attr_reader :jid
 
-    def initialize(number, name = '', debug = false, identity_file = nil)
-      logger.enable_debug if debug
+    def initialize(number, name = '', options = {})
+      logger.enable_debug if options[:debug]
       @jid = Dora::Protocol::JID.new(number, name)
       @con = Dora::Connector.new(number)
       @con.connect
-    end
-
-    # Registers methods
-    def code_request(method = 'sms', carrier = nil)
-      set_reg
-      @reg.get_code(method, carrier)
-    end
-
-    def code_register(code)
-      set_reg
-      @reg.send_code(code)
-    end
-
-    def check_credentials
-      set_reg
-      @reg.check_credentials
     end
 
     # Flow
@@ -72,18 +58,13 @@ module Dora
       @con.send_message to, message
     end
 
-    def send_image(to, file_path, store_url_media = false, f_size = 0, f_hash = '', caption = '')
-      @con.send_image to, file_path, store_url_media, f_size, f_hash, caption
+    def send_image(to, file_path, *args)
+      @con.send_image to, file_path, args
     end
 
     def messages
       @con.get_messages
     end
 
-    private
-
-    def set_reg
-      @reg ||= Dora::Client::Registration.new(@jid.number)
-    end
   end
 end
