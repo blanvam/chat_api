@@ -8,6 +8,7 @@ module Dora
   # Client class to connect with WhatsApp
   class Client
     include ClientRegistration
+
     attr_reader :jid
 
     def initialize(number, name = '', options = {})

@@ -1,13 +1,13 @@
 require 'dora/registration/identity'
+require 'dora/registration/phone'
 require 'dora/registration/token'
 require 'dora/registration/utils'
-require 'dora/registration/phone'
 require 'dora/util'
 
 module Dora
   module Registration
     # The Registration class has all methods needed to register a whatsapp number.
-    class Service
+    class Register
       include Util
       include Utils
 
@@ -55,14 +55,14 @@ module Dora
       def get_code_hash(method, carrier, platform)
         number = phone.number
         token = Token.new(number)
-        token = token.generate(platform)
+        tok = token.generate(platform)
         mnc = phone.mnc(carrier)
         mcc = phone.mcc
         rc_hash = Digest::SHA256.hexdigest(random_bytes(20))
         an_hash = Digest::MD5.hexdigest(random_bytes(20))
 
         {
-            cc: phone.cc, in: number, lg: phone.lang_code, lc: phone.country_code, id: @identity.to_s, token: token,
+            cc: phone.cc, in: number, lg: phone.lang_code, lc: phone.country_code, id: @identity.to_s, token: tok,
             mistyped: '6', network_radio_type: '1', simnum: '1', s: '', copiedrc: '1', hasinrc: '1', rcmatch: '1',
             pid: rand(9899)+100, rchash: rc_hash, anhash: an_hash, extexist: '1', extstate: '1', mcc: mcc, mnc: mnc,
             sim_mcc: mcc, sim_mnc: mnc, method: method

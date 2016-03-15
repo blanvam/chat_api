@@ -1,4 +1,4 @@
-require 'dora/registration/service'
+require 'dora/registration/register'
 
 module Dora
   module ClientRegistration
@@ -22,7 +22,7 @@ module Dora
     private
 
     def set_reg
-      @reg ||= Service.new(@jid.number, @path_identity)
+      @reg ||= Register.new(@jid.number, @path_identity)
     end
 
   end

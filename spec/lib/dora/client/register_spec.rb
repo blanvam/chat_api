@@ -1,26 +1,26 @@
 # encoding: utf-8
 require 'spec_helper'
 require 'chat_api'
-require 'dora/registration/service'
+require 'dora/registration/register'
 
-describe Dora::Registration::Service, unit: true do
+describe Dora::Registration::Register, unit: true do
   it 'is available as described_class' do
-    expect(described_class).to eq(Dora::Registration::Service)
+    expect(described_class).to eq(Dora::Registration::Register)
   end
 end
 
-describe Dora::Registration::Service, unit: true do
+describe Dora::Registration::Register, unit: true do
   before do
     file = File.expand_path('../chat_api/spec/support/identity/id.123456789.dat')
-    @service = Dora::Registration::Service.new('34612345678', file)
+    @register = Dora::Registration::Register.new('34612345678', file)
   end
 
   it 'correct object created' do
-    expect(@service.class).to eq(Dora::Registration::Service)
+    expect(@register.class).to eq(Dora::Registration::Register)
   end
 
   it 'get the phone' do
-    expect(@service.phone.class).to eq(Dora::Registration::Phone)
+    expect(@register.phone.class).to eq(Dora::Registration::Phone)
   end
 
   it 'fail get code, already sent' do
@@ -29,7 +29,7 @@ describe Dora::Registration::Service, unit: true do
         with(:headers => {'Accept'=>'text/json', 'Accept-Encoding'=>'gzip, deflate', 'User-Agent'=>'WhatsApp/2.12.440 Android/4.3 Device/Xiaomi-HM_1SW'}).
         to_return(:status => 200, :body => File.read(File.expand_path(File.join('spec/support/registration/get_code_fail.json'))), :headers => {})
 
-    expect{@service.get_code}.to raise_error(Dora::RegistrationError, /Code already sent. Retry after 179.0 minutes./)
+    expect{@register.get_code}.to raise_error(Dora::RegistrationError, /Code already sent. Retry after 179.0 minutes./)
   end
 
   it 'fail get code, token bad formed' do
@@ -38,7 +38,7 @@ describe Dora::Registration::Service, unit: true do
         with(:headers => {'Accept'=>'text/json', 'Accept-Encoding'=>'gzip, deflate', 'User-Agent'=>'WhatsApp/2.12.440 Android/4.3 Device/Xiaomi-HM_1SW'}).
         to_return(:status => 200, :body => File.read(File.expand_path(File.join('spec/support/registration/get_code_bad_token.json'))), :headers => {})
 
-    expect{@service.get_code}.to raise_error(Dora::RegistrationError, /Bad token formed/)
+    expect{@register.get_code}.to raise_error(Dora::RegistrationError, /Bad token formed/)
   end
 
   it 'fail get code, blocked' do
@@ -47,7 +47,7 @@ describe Dora::Registration::Service, unit: true do
         with(:headers => {'Accept'=>'text/json', 'Accept-Encoding'=>'gzip, deflate', 'User-Agent'=>'WhatsApp/2.12.440 Android/4.3 Device/Xiaomi-HM_1SW'}).
         to_return(:status => 200, :body => File.read(File.expand_path(File.join('spec/support/registration/get_code_blocked.json'))), :headers => {})
 
-    expect{@service.get_code}.to raise_error(Dora::RegistrationError, /The number is blocked./)
+    expect{@register.get_code}.to raise_error(Dora::RegistrationError, /The number is blocked./)
   end
 
   it 'correct get code' do
@@ -56,7 +56,7 @@ describe Dora::Registration::Service, unit: true do
         with(:headers => {'Accept'=>'text/json', 'Accept-Encoding'=>'gzip, deflate', 'User-Agent'=>'WhatsApp/2.12.440 Android/4.3 Device/Xiaomi-HM_1SW'}).
         to_return(:status => 200, :body => File.read(File.expand_path(File.join('spec/support/registration/get_code_ok.json'))), :headers => {})
 
-    response = @service.get_code
+    response = @register.get_code
     er = {status: 'sent', length: 6, method: 'sms', retry_after: 64, sms_wait: 64, voice_wait: 64}
     expect(response).to include(er)
   end
