@@ -1,20 +1,22 @@
 require 'dora/logger'
-require 'dora/client_registration'
-require 'dora/connector'
+require 'dora/util'
+require 'dora/registration'
+require 'dora/connector_media'
 
 module Dora
   include Logging
+  include Util
 
   # Client class to connect with WhatsApp
   class Client
-    include ClientRegistration
+    include Registration
 
     attr_reader :jid
 
     def initialize(number, name = '', options = {})
       logger.enable_debug if options[:debug]
       @jid = Dora::Protocol::JID.new(number, name)
-      @con = Dora::Connector.new(number)
+      @con = Dora::ConnectorMedia.new(number)
       @con.connect
     end
 
@@ -64,7 +66,7 @@ module Dora
     end
 
     def messages
-      @con.get_messages
+      @con.messages
     end
 
   end
