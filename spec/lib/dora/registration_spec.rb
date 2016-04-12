@@ -1,5 +1,6 @@
 require 'spec_helper'
 require 'dora/registration'
+require 'dora/protocol/jid'
 
 describe Dora::Registration, unit: true do
   it 'is available as described_class' do

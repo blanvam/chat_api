@@ -2,7 +2,7 @@
 require 'spec_helper'
 require 'support/stubs/register.rb'
 
-require 'chat_api'
+require 'dora'
 require 'dora/registration/register'
 
 describe Dora::Registration::Register, unit: true do

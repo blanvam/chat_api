@@ -1,5 +1,5 @@
 require 'spec_helper'
-require 'chat_api'
+require 'dora'
 require 'dora/registration/token'
 
 describe Dora::Registration::Token, unit: true do

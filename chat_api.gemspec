@@ -21,7 +21,6 @@ Gem::Specification.new do |spec|
   spec.files         = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }
   spec.require_paths = %w(lib data)
 
-  spec.add_dependency 'activesupport'
   spec.add_dependency 'rest-client'
   spec.add_dependency 'mini_magick'
   spec.add_development_dependency 'bundler'

@@ -1,8 +1,9 @@
 require 'rest-client'
-require 'active_support/core_ext/object/to_query'
 require 'json'
 require 'CSV'
 require 'tempfile'
+
+require 'active_support/core_ext/object/to_query'
 
 module Dora
   module Registration

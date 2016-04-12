@@ -14,6 +14,7 @@ module Dora
         @address = TCPSocket.gethostbyname(host)[3]
         @host = host
         @port = port
+        @step = 0
 
         connect
       end
@@ -34,7 +35,10 @@ module Dora
 
         # Read data from socket
         begin
-          @socket.sysread(maxlen, buffer)
+          x = @socket.sysread(maxlen, buffer)
+          puts 'STEP: ' + @step.to_s + ": #{Base64.strict_encode64(x)}"
+          @step = @step + 1
+          x
         rescue SystemCallError, IOError => ex
           raise ConnectionFailure, ex
         end

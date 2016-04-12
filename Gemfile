@@ -9,7 +9,7 @@ group :test do
   gem 'webmock'
   gem 'shoulda-matchers'
 end
-gem 'rubycritic'
+# gem 'rubycritic'
 
 =begin
   # CODE ANALYSIS AND METRICS

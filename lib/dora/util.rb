@@ -25,7 +25,16 @@ module Dora
     #
     # @return [String] of size bytes
     def random_bytes(size)
-      Random.new.bytes(size)
+      SecureRandom.random_bytes(size)
+    end
+
+    # Generate random string of hexadecimals
+    #
+    # @param [Integer] size of the string
+    #
+    # @return [String] of size hexadecimals
+    def random_hex(size)
+      SecureRandom.hex(size)
     end
   end
 end

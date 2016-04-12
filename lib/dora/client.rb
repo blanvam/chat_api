@@ -1,7 +1,7 @@
 require 'dora/logger'
 require 'dora/util'
 require 'dora/registration'
-require 'dora/connector_media'
+require 'dora/connector'
 
 module Dora
   include Logging
@@ -16,7 +16,7 @@ module Dora
     def initialize(number, name = '', options = {})
       logger.enable_debug if options[:debug]
       @jid = Dora::Protocol::JID.new(number, name)
-      @con = Dora::ConnectorMedia.new(number)
+      @con = Dora::Connector.new(number)
       @con.connect
     end
 
