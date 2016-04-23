@@ -1,4 +1,4 @@
-require 'dora/protocol/token_map'
+require 'dora/protocol/bin_tree/token_map'
 
 module Dora
   module Protocol
@@ -166,10 +166,10 @@ module Dora
           end
 
           def get_token(token)
-            ret, sub_dict = Dora::Protocol::BinTree::TokenMap.get_token(token, false)
+            ret, primary = Dora::Protocol::BinTree::TokenMap.parse(token)
             if ret.nil?
               token = read_int8
-              ret = Dora::Protocol::BinTree::TokenMap.get_token(token, sub_dict)[0]
+              ret = Dora::Protocol::BinTree::TokenMap.parse(token, primary)[0]
               if ret.nil?
                 raise ChatAPIError.new("BinTree::NodeReader.get_token: Invalid token / length #{token}")
               end
@@ -179,7 +179,7 @@ module Dora
 
           def get_token_double(n1, n2)
             pos = n2 + n1 * 256
-            ret = Dora::Protocol::BinTree::TokenMap.get_token(pos, true)[0]
+            ret = Dora::Protocol::BinTree::TokenMap.parse_secondary(pos)
             raise ChatAPIError.new("BinTree::NodeReader.get_token_double: Invalid token #{pos}(#{n2} + #{n1} * 256)") unless ret
             ret
           end

@@ -55,9 +55,9 @@ module Dora
 				end
 
 				def write_string(tag, packed = false)
-					found, main, index = TokenMap.try_get_token(tag, false)
-					if found
-						if main
+					index, primary = TokenMap.read(tag)
+					if index
+						unless primary
 							write_token(236)
 						end
 						write_token(index)

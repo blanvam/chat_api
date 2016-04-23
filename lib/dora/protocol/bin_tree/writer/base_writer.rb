@@ -1,6 +1,4 @@
 require 'dora/protocol/bin_tree/node'
-require 'dora/protocol/token_map'
-
 require 'dora/protocol/bin_tree/writer/helper'
 
 module Dora
