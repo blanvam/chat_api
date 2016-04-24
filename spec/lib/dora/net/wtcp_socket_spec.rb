@@ -16,7 +16,7 @@ describe Dora::Net::WTCPSocket, unit: true do
     expect(@socket.connected?).to eq(true)
   end
 
-  it 'create a object' do
+  xit 'create a object' do
     expect(@socket.read(maxlen, buffer)).to eq(true)
   end
 

@@ -18,7 +18,7 @@ describe Dora::Registration::Token, unit: true do
   end
 
   it 'correct token generation for android' do
-    expect(@token.generate('Android')).to eq('Pv0hrTSPfZw/TKm60kaAKHaK22w=')
+    expect(@token.generate('Android')).to eq('N/RdJbGNN64hSXjVUBy3rzSVsi4=')
   end
 
   it 'method_missing' do
@@ -27,20 +27,20 @@ describe Dora::Registration::Token, unit: true do
 end
 
 describe Dora::Registration::Token, unit: true do
-  it 'correct token generation for nokia' do
-    rel = {e: '2.12.440', h: '9999999999999'}
+  it 'correct update of RELEASE_TIME' do
+    rel = {e: Dora::WHATSAPP_VER, h: '9999999999999'}
     Dora::Registration::Token.update_release_time(rel)
     expect(Dora::Registration::Token::RELEASE_TIME).to eq('1452554789539')
   end
 
   it 'correct  RELEASE_TIME' do
-    rel = {e: '2.12.441', h: '9999999999999'}
+    rel = {e: Dora::WHATSAPP_VER+'1', h: '9999999999999'}
     Dora::Registration::Token.update_release_time(rel)
     expect(Dora::Registration::Token::RELEASE_TIME).to eq('9999999999999')
   end
 
   it 'correct token RELEASE_TIME to default' do
-    rel = {e: '2.12.41', h: '1452554789539'}
+    rel = {e: Dora::WHATSAPP_VER+'2', h: '1452554789539'}
     Dora::Registration::Token.update_release_time(rel)
     expect(Dora::Registration::Token::RELEASE_TIME).to eq('1452554789539')
   end
