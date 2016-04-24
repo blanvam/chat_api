@@ -5,9 +5,9 @@ module Dora
       class TokenMap
         def self.read(string)
           secondary = true
-          index = read_primary(string)
+          index = tokens['primary'].index(string)
           unless index
-            index = read_second(string)
+            index = tokens['secondary'].index(string)
             secondary = false
           end
           [index, secondary]
@@ -32,14 +32,6 @@ module Dora
         end
 
         private
-
-        def self.read_primary(string)
-          tokens['primary'].index(string)
-        end
-
-        def self.read_second(string)
-          tokens['secondary'].index(string)
-        end
 
         def self.parse_token(token_map, idx)
           if idx < 0 or idx > token_map.length
