@@ -5,6 +5,10 @@ module Dora
   # All of our custom errors are superclassed by ChatAPIError < StandardError
   class ChatAPIError < StandardError; end
 
+  class ConnectionTimeout < RuntimeError; end
+
+  class TokenError < ChatAPIError; end
+
   # A client-side only argument error
   class ArgumentError < ChatAPIError; end
 
