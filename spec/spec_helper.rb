@@ -12,22 +12,9 @@ RSpec.configure do |config|
 
 end
 
-class TCPSocket
+class FakeWTCPSocket
 
-  def self.open(host, port)
-    new(host, port)
-  end
-
-  def initialize(host, port)
-    @mock = "mock #{host} #{port}"
-    @step = 0
-  end
-
-  def closed?
-    false
-  end
-
-  def sysread(maxlen, buffer)
+  def read(maxlen, buffer)
     MOCK_RESPONSES[@step]
     @step = @step + 1
   end

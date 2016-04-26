@@ -7,15 +7,7 @@ module Dora
 
       def initialize
         @status = :disconnected
-        @socket = nil
-      end
-
-      def connect
         @socket = WTCPSocket.new('e' + rand(1..16).to_s + '.whatsapp.net', PORT, TIMEOUT_SEC, TIMEOUT_SEC)
-      end
-
-      def connected?
-        @socket.connected?
       end
 
       def log_in
@@ -31,15 +23,21 @@ module Dora
       end
 
       def disconnect
-        unless @socket.nil?
-          @socket.close
-          @status =:disconnect
-        end
+        @socket.close
+        @status =:disconnect
+      end
+
+      def connect
+        @socket.connect
+      end
+
+      def connected?
+        @socket.connected?
       end
 
       def send_data(data)
         logger.debug_log('Sent: '+bin2hex(data)+"\n")
-        unless @socket.nil?
+        if connected?
           begin
             @socket.write(data)
           rescue Errno::EPIPE
@@ -52,7 +50,7 @@ module Dora
 
       def read_stanza
         buffer = ''.force_encoding(BINARY_ENCODING)
-        unless @socket.nil?
+        if connected?
           begin
             header = read_head
           rescue HeadEmpty

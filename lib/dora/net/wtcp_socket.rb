@@ -15,8 +15,16 @@ module Dora
         @host = host
         @port = port
         @step = 0
+      end
 
-        connect
+      def connect
+        if @connect_timeout
+          Timeout::timeout(@connect_timeout, SocketTimeout) do
+            open_socket
+          end
+        else
+          open_socket
+        end
       end
 
       def write(data)
@@ -49,27 +57,19 @@ module Dora
       end
 
       def closed?
-        @socket.closed?
+        (@socket.nil? || @socket.closed?)
       end
 
       def connected?
-        !@socket.closed?
+        !closed?
       end
 
       private
-      def connect
-        if @connect_timeout
-          Timeout::timeout(@connect_timeout, SocketTimeout) do
-            open_socket
-          end
-        else
-          open_socket
-        end
-      end
 
       def open_socket
-        @socket = TCPSocket.open(@host, @port)
+        @socket ||= TCPSocket.open(@host, @port)
       end
+
     end
   end
 end
