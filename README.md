@@ -1,5 +1,7 @@
 # ChatApi
 
+[![Build Status](https://travis-ci.org/asfarto/chat_api.svg?branch=dev)](https://travis-ci.org/asfarto/chat_api)
+
 This is an API based on Chat API (php).
 
 ## Installation
