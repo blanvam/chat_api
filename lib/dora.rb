@@ -34,6 +34,10 @@ module Dora
       File.join File.dirname(__dir__), 'data'
     end
 
+    def tokens
+      YAML.load_file File.join(data, 'tokens.yaml')
+    end
+
     def update_ver(data)
       ver = data[:e]
       if WHATSAPP_VER != ver

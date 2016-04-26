@@ -2,6 +2,9 @@ require 'spec_helper'
 require 'dora/protocol/bin_tree/token_map'
 
 describe Dora::Protocol::BinTree::TokenMap, unit: true do
+  before(:each, specific_specs: true) do
+    @tokens = Dora.tokens
+  end
 
   describe 'class' do
     it 'is available as described_class' do
@@ -9,11 +12,7 @@ describe Dora::Protocol::BinTree::TokenMap, unit: true do
     end
   end
 
-  describe '#read' do
-    before(:all) do
-      @tokens = YAML.load_file 'lib/dora/protocol/bin_tree/tokens.yaml'
-    end
-
+  describe '#read', specific_specs: true do
     it 'correct primary tokens' do
       primary = @tokens['primary'].drop(3)
       primary.each.with_index(3) do |value, index|
@@ -37,11 +36,7 @@ describe Dora::Protocol::BinTree::TokenMap, unit: true do
 
   end
 
-  describe '#parse' do
-    before(:all) do
-      @tokens = YAML.load_file 'lib/dora/protocol/bin_tree/tokens.yaml'
-    end
-
+  describe '#parse', specific_specs: true do
     it 'correct primary tokens' do
       primary = @tokens['primary'].drop(3)
       primary.each.with_index(3) do |value, index|
@@ -75,10 +70,9 @@ describe Dora::Protocol::BinTree::TokenMap, unit: true do
 
   end
 
-  describe '#parse_primary' do
-    before(:all) do
-      tokens = YAML.load_file 'lib/dora/protocol/bin_tree/tokens.yaml'
-      @primary = tokens['primary'].drop(3)
+  describe '#parse_primary', specific_specs: true do
+    before do
+      @primary = @tokens['primary'].drop(3)
     end
 
     it 'correct primary tokens' do
@@ -95,10 +89,9 @@ describe Dora::Protocol::BinTree::TokenMap, unit: true do
 
   end
 
-  describe '#parse_secondary' do
-    before(:all) do
-      tokens = YAML.load_file 'lib/dora/protocol/bin_tree/tokens.yaml'
-      @secondary = tokens['secondary']
+  describe '#parse_secondary', specific_specs: true do
+    before do
+      @secondary = @tokens['secondary']
     end
 
     it 'correct secondary tokens' do

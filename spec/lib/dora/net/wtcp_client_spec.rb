@@ -3,8 +3,9 @@ require 'dora/net/wtcp_client'
 require 'dora/net/wtcp_socket'
 
 describe Dora::Net::WTCPClient, unit: true do
-  before do
+  before(:each, specific_specs: true) do
     allow(Dora::Net::WTCPSocket).to receive(:new).and_return(FakeWTCPSocket.new)
+    @socket = Dora::Net::WTCPClient.new
   end
 
   describe 'class' do
@@ -13,11 +14,7 @@ describe Dora::Net::WTCPClient, unit: true do
     end
   end
 
-  describe '#connected?', unit: true do
-    before do
-      @socket = Dora::Net::WTCPClient.new
-    end
-
+  describe '#connected?', unit: true, specific_specs: true do
     it 'must return false' do
       allow_any_instance_of(FakeWTCPSocket).to receive(:connected?).and_return(false)
       expect(@socket.connected?).to eq(false)
@@ -29,9 +26,8 @@ describe Dora::Net::WTCPClient, unit: true do
     end
   end
 
-  describe '#logged?', unit: true do
+  describe '#logged?', unit: true, specific_specs: true do
     before do
-      @socket = Dora::Net::WTCPClient.new
       allow_any_instance_of(FakeWTCPSocket).to receive(:connected?).and_return(true)
     end
 

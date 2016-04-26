@@ -46,7 +46,7 @@ module Dora
         end
 
         def self.tokens
-          @tokens ||= YAML.load_file 'lib/dora/protocol/bin_tree/tokens.yaml'
+          @tokens ||= Dora.tokens
         end
 
       end
