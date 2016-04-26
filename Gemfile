@@ -8,6 +8,8 @@ group :test do
   gem 'yard'
   gem 'webmock'
   gem 'shoulda-matchers'
+
+  gem 'codeclimate-test-reporter', require: nil
 end
 # gem 'rubycritic'
 

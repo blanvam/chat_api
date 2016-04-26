@@ -3,14 +3,17 @@ Bundler.setup
 
 require 'dora'
 require 'webmock/rspec'
+require 'codeclimate-test-reporter'
 
 RSpec.configure do |config|
 
   config.before(:suite) do
-    WebMock.disable_net_connect!(allow_localhost: true)
+    WebMock.disable_net_connect!(allow_localhost: true, allow: 'codeclimate.com')
   end
 
 end
+
+CodeClimate::TestReporter.start
 
 class FakeWTCPSocket
 
