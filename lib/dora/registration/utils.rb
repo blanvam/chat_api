@@ -1,6 +1,6 @@
 require 'rest-client'
 require 'json'
-require 'CSV'
+require 'csv'
 require 'tempfile'
 
 require 'active_support/core_ext/object/to_query'
