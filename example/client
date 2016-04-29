@@ -22,16 +22,16 @@ w.login(password)
 puts 'Connected to WhatsApp'
 
 w.server_properties
-w.client_configuration
+w.send_client_configuration(create_iq_id)
 w.synchronize(sync)
-w.poll_message
+w.get_and_process_next_node
 w.presence_subscription(target_v)
 
 w.set_profile_picture(Dir.pwd + '/images/rice_milk.jpg')
 
 while true do
-    w.poll_message
-    w.get_messages
+    w.get_and_process_next_node
+    w.get_and_process_next_node
     begin
       Timeout::timeout 1 do
         line = gets.chomp
